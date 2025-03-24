@@ -30,7 +30,7 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
 
 ### Technologie
 - Utilisation de l'API ChatGPT (OpenAI) pour générer dynamiquement le contenu pédagogique (extraits de code et questions théoriques).
-- Interface web intuitive, facile d'utilisation et responsive.
+- Interface mobile intuitive, facile d'utilisation et responsive.
 
 ## Maquette de l'interface graphique
 
