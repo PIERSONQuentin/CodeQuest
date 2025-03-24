@@ -34,7 +34,7 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
 
 ## Maquette de l'interface graphique
 
-![Maquette de l'interface](/kotlin-td3-pierson-dao/image.png)
+![Maquette de l'interface](image.png)
 
 - **Page d'accueil :** Nom de l'application et bouton pour commencer.
 - **Page des mini-jeux :** Liste des mini-jeux sous forme de cartes, avec barre de recherche pour faciliter la sélection rapide.
