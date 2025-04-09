@@ -58,49 +58,51 @@ data class QuizResultRoute(val idQuiz: Int)
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+    val quizViewModel: QuizViewModel = viewModel()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("CodeQuest") },
-                navigationIcon = {
-                    when {
-                        // Sur QuizDetail → flèche retour
-                        currentRoute?.contains("QuizDetailRoute") == true -> {
-                            IconButton(onClick = { navController.popBackStack() }) {
-                                Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
-                            }
-                        }
-
-                        // Sur Quiz ou Result → bouton accueil
-                        currentRoute?.contains("QuizRoute") == true ||
-                                currentRoute?.contains("QuizResultRoute") == true -> {
-                            IconButton(onClick = {
-                                navController.navigate(QuizListRoute) {
-                                    popUpTo(navController.graph.startDestinationId) {
-                                        inclusive = true
-                                    }
+            // Ne pas afficher de topBar sur l'écran des résultats
+            if (currentRoute?.contains("QuizResultRoute") != true) {
+                TopAppBar(
+                    title = { Text("CodeQuest") },
+                    navigationIcon = {
+                        when {
+                            // Sur QuizDetail -> flèche retour
+                            currentRoute?.contains("QuizDetailRoute") == true -> {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
                                 }
-                            }) {
-                                Icon(Icons.Default.Home, contentDescription = "Accueil")
                             }
-                        }
 
-                        // Sur QuizList → aucun bouton
-                        else -> null
+                            // Sur Quiz uniquement -> bouton accueil
+                            currentRoute?.contains("QuizRoute") == true -> {
+                                IconButton(onClick = {
+                                    navController.navigate(QuizListRoute) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }) {
+                                    Icon(Icons.Default.Home, contentDescription = "Accueil")
+                                }
+                            }
+
+                            else -> null
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = { /* TODO: profil */ }) {
+                            Icon(Icons.Default.Person, contentDescription = "Profil")
+                        }
+                        IconButton(onClick = { /* TODO: paramètres */ }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Paramètres")
+                        }
                     }
-                },
-                actions = {
-                    IconButton(onClick = { /* TODO: profil */ }) {
-                        Icon(Icons.Default.Person, contentDescription = "Profil")
-                    }
-                    IconButton(onClick = { /* TODO: paramètres */ }) {
-                        Icon(Icons.Default.Settings, contentDescription = "Paramètres")
-                    }
-                }
-            )
+                )
+            }
         }
     ) { innerPadding ->
         NavHost(
@@ -130,6 +132,26 @@ fun MyApp() {
                 )
             }
 
+            composable<QuizRoute> {
+                val route = it.toRoute<QuizRoute>()
+                QuizScreen(
+                    idQuiz = route.idQuiz,
+                    viewModel = quizViewModel,
+                    onFinishQuiz = {
+                        navController.navigate(QuizResultRoute(route.idQuiz))
+                    }
+                )
+            }
+
+            composable<QuizResultRoute> {
+                val route = it.toRoute<QuizResultRoute>()
+                QuizResultScreen(
+                    idQuiz = route.idQuiz,
+                    viewModel = quizViewModel,
+                    navController = navController
+                )
+            }
+
 
             /*
             composable<QuizRoute> {
@@ -146,10 +168,11 @@ fun MyApp() {
 
             composable<QuizResultRoute> {
                 val route = it.toRoute<QuizResultRoute>()
-                val viewModel: QuizResultViewModel = viewModel()
+                val viewModel: QuizViewModel = viewModel()
                 QuizResultScreen(
                     idQuiz = route.idQuiz,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    navController = navController
                 )
             }
             */

@@ -1,14 +1,17 @@
 package fr.unica.miage.pierson.codequest.data
 
 /**
- * Data class représentant une question de quiz.
+ * Représente une question de quiz.
  *
+ * @property codeSnippet Un extrait de code affiché avant la question.
  * @property questionText Le texte de la question.
- * @property options La liste des options de réponse.
- * @property correctAnswerIndex L'index de la réponse correcte dans la liste des options.
+ * @property options Les choix de réponse proposés.
+ * @property correctAnswersIndexes L'indice de la bonne réponse dans la liste options.
  */
+
 data class Question(
+    val codeSnippet: String,
     val questionText: String,
     val options: List<String>,
-    val correctAnswerIndex: Int
+    val correctAnswersIndexes: List<Int>
 )
