@@ -5,8 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -39,11 +41,15 @@ fun QuizListScreen(
     Column(modifier = Modifier.fillMaxSize()) {
 
         // Supprimé les icônes, barre de recherche seule
-        TextField(
+        OutlinedTextField(
             value = viewModel.searchQuery,
             onValueChange = viewModel::onSearchChange,
             placeholder = { Text("Rechercher un quiz...") },
             singleLine = true,
+            shape = RoundedCornerShape(12.dp),
+            leadingIcon = {
+                Icon(Icons.Default.Search, contentDescription = "Recherche")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)

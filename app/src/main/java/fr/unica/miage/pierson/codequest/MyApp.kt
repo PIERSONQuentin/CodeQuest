@@ -59,12 +59,39 @@ data class QuizResultRoute(val idQuiz: Int)
 fun MyApp() {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val canGoBack = navController.previousBackStackEntry != null
+    val currentRoute = backStackEntry?.destination?.route
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("CodeQuest") },
+                navigationIcon = {
+                    when {
+                        // Sur QuizDetail → flèche retour
+                        currentRoute?.contains("QuizDetailRoute") == true -> {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
+                            }
+                        }
+
+                        // Sur Quiz ou Result → bouton accueil
+                        currentRoute?.contains("QuizRoute") == true ||
+                                currentRoute?.contains("QuizResultRoute") == true -> {
+                            IconButton(onClick = {
+                                navController.navigate(QuizListRoute) {
+                                    popUpTo(navController.graph.startDestinationId) {
+                                        inclusive = true
+                                    }
+                                }
+                            }) {
+                                Icon(Icons.Default.Home, contentDescription = "Accueil")
+                            }
+                        }
+
+                        // Sur QuizList → aucun bouton
+                        else -> null
+                    }
+                },
                 actions = {
                     IconButton(onClick = { /* TODO: profil */ }) {
                         Icon(Icons.Default.Person, contentDescription = "Profil")
@@ -74,45 +101,6 @@ fun MyApp() {
                     }
                 }
             )
-        },
-        bottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Bouton retour à gauche si possible
-                    if (canGoBack) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp)) // Espace réservé si pas de bouton retour
-                    }
-
-                    // Bouton Accueil centré
-                    val isOnQuizList = backStackEntry?.destination?.route?.contains("QuizListRoute") == true
-                    if (isOnQuizList) {
-                        IconButton(onClick = {
-                            navController.navigate(QuizListRoute) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    inclusive = true
-                                }
-                            }
-                        }) {
-                            Icon(Icons.Default.Home, contentDescription = "Accueil")
-                        }
-                    } else {
-                        Spacer(modifier = Modifier.size(48.dp)) // Espace réservé si pas de bouton accueil
-                    }
-
-                    // Espace visuel à droite pour équilibrer
-                    Spacer(modifier = Modifier.size(48.dp))
-                }
-            }
         }
     ) { innerPadding ->
         NavHost(
@@ -130,7 +118,6 @@ fun MyApp() {
                 )
             }
 
-            /*
             composable<QuizDetailRoute> {
                 val route = it.toRoute<QuizDetailRoute>()
                 val viewModel: QuizDetailViewModel = viewModel()
@@ -143,6 +130,8 @@ fun MyApp() {
                 )
             }
 
+
+            /*
             composable<QuizRoute> {
                 val route = it.toRoute<QuizRoute>()
                 val viewModel: QuizViewModel = viewModel()
