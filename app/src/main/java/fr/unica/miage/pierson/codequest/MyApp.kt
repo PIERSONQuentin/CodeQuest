@@ -45,6 +45,10 @@ data class QuizRoute(val idQuiz: Int)
 data class QuizResultRoute(val idQuiz: Int)
 // Route vers la page de résultats d'un quiz identifié par son id
 
+@kotlinx.serialization.Serializable
+data class QuizReviewRoute(val idQuiz: Int)
+// Route vers la page de révision d'un quiz identifié par son id
+
 
 /**
  * Fonction principale de l'application
@@ -152,30 +156,11 @@ fun MyApp() {
                 )
             }
 
-
-            /*
-            composable<QuizRoute> {
-                val route = it.toRoute<QuizRoute>()
-                val viewModel: QuizViewModel = viewModel()
-                QuizScreen(
-                    idQuiz = route.idQuiz,
-                    viewModel = viewModel,
-                    onFinishQuiz = {
-                        navController.navigate(QuizResultRoute(route.idQuiz))
-                    }
-                )
+            composable<QuizReviewRoute> {
+                val viewModel: QuizViewModel = quizViewModel
+                QuizReviewScreen(viewModel = viewModel, navController = navController)
             }
 
-            composable<QuizResultRoute> {
-                val route = it.toRoute<QuizResultRoute>()
-                val viewModel: QuizViewModel = viewModel()
-                QuizResultScreen(
-                    idQuiz = route.idQuiz,
-                    viewModel = viewModel,
-                    navController = navController
-                )
-            }
-            */
         }
     }
 }

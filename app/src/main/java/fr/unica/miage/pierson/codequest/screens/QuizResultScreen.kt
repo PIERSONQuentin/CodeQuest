@@ -6,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import fr.unica.miage.pierson.codequest.QuizReviewRoute
 import fr.unica.miage.pierson.codequest.data.DataSource
 import fr.unica.miage.pierson.codequest.viewmodel.QuizViewModel
 
@@ -69,19 +70,30 @@ fun QuizResultScreen(
             )
         }
 
-        Button(
-            onClick = {
-                navController.navigate(fr.unica.miage.pierson.codequest.QuizListRoute) {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
+        Column {
+            Button(
+                onClick = {
+                    navController.navigate(QuizReviewRoute(idQuiz))
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            ) {
+                Text("Voir les réponses")
+            }
+
+            Button(
+                onClick = {
+                    navController.navigate(fr.unica.miage.pierson.codequest.QuizListRoute) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true
+                        }
                     }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-        ) {
-            Text("Retour à l'accueil")
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Retour à l'accueil")
+            }
         }
     }
 }
