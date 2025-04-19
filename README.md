@@ -44,5 +44,37 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
 
 ### Objectifs atteints
 
+- [x] Mise en place de l’interface principale avec :
+    - [x] Barre de recherche fonctionnelle pour filtrer les quiz
+    - [x] Liste des quiz sous forme de cartes (titre, description, note, image)
+- [x] Navigation entre les écrans avec des routes typées `@Serializable`
+- [x] Détail d’un quiz :
+    - [x] Affichage du titre, description, image
+    - [x] Bouton "Commencer"
+- [x] Écran de quiz :
+    - [x] Affichage de l’extrait de code (bloc de 400dp, centré verticalement)
+    - [x] Question placée juste au-dessus des réponses
+    - [x] Choix sous forme de boutons cochables (visuel checkbox)
+    - [x] Prise en charge de plusieurs bonnes réponses
+    - [x] Bouton "Suivant" ou "Voir le score" centré en bas
+    - [x] Navigation entre les questions
+    - [x] Réinitialisation du quiz quand on recommence
+- [x] Gestion du score :
+    - [x] Calcul avec comparaison des réponses multiples
+    - [x] Message personnalisé selon la performance
+    - [x] Couleurs dynamiques selon le résultat (succès / moyen / échec)
+- [x] Écran de résultats :
+    - [x] Affiche le titre du quiz, le score, et un message
+    - [x] Bouton "Retour à l’accueil" fonctionnel
+    - [x] Bouton "Voir les réponses" juste au-dessus
+- [x] Écran de correction :
+    - [x] Liste scrollable des questions et réponses
+    - [x] Code affiché dans un bloc dédié
+    - [x] Réponses correctes en vert, erreurs en rouge, neutres en gris
+    - [x] Bouton "Retour à l’accueil" en bas
+
+- [ ] Intégration de l’API ChatGPT pour générer dynamiquement les questions
+- [ ] Analyse et transformation des réponses de l’IA en objets `Question`
+- [ ] Possibilité de rejouer une série générée par l’IA
 
 ### Liens vers la vidéo
