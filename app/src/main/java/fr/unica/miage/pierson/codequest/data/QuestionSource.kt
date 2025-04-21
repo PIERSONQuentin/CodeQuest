@@ -22,11 +22,11 @@ object QuestionSource {
      * @param idQuiz L'identifiant du quiz (correspond à sa position dans la liste).
      * @return Une liste de questions générées dynamiquement pour ce quiz.
      */
-    fun getQuestionsForQuiz(idQuiz: Int): List<Question> {
+    suspend fun getQuestionsForQuiz(idQuiz: Int): List<Question> {
         val quizzes = DataSource().loadQuizzes()
         val quiz = quizzes.getOrNull(idQuiz) ?: return emptyList()
 
-        val generatedQuestions = openAIService.generateQuestions(quiz.title, 5) // Generate 5 questions
+        val generatedQuestions = openAIService.generateQuestions(quiz.title, 5) // suspend
         return generatedQuestions.map { rawQuestion ->
             parseQuestion(rawQuestion)
         }

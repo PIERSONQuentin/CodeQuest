@@ -7,6 +7,7 @@ import com.aallam.openai.api.chat.ChatMessage
 import com.aallam.openai.api.chat.ChatRole
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
+import fr.unica.miage.pierson.codequest.BuildConfig
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -17,7 +18,7 @@ class OpenAIService {
     private val openAI: OpenAI
 
     init {
-        val apiKey = "your-api-key-here"
+        val apiKey = BuildConfig.OPENAI_API_KEY
         openAI = OpenAI(token = apiKey)
     }
 
@@ -28,7 +29,7 @@ class OpenAIService {
      * @param numQuestions The number of questions to generate.
      * @return A list of generated questions as strings.
      */
-    fun generateQuestions(topic: String, numQuestions: Int): List<String> {
+    suspend fun generateQuestions(topic: String, numQuestions: Int): List<String> {
         val prompt = """
             Generate $numQuestions quiz questions about $topic. Each question should include:
             - A code snippet (if applicable)
@@ -45,10 +46,8 @@ class OpenAIService {
             )
         )
 
-        return runBlocking {
-            val response = openAI.chatCompletion(chatCompletionRequest)
-            val generatedText = response.choices.firstOrNull()?.message?.content ?: ""
-            generatedText.split("\n\n").filter { it.isNotBlank() }
-        }
+        val response = openAI.chatCompletion(chatCompletionRequest)
+        val generatedText = response.choices.firstOrNull()?.message?.content ?: ""
+        return generatedText.split("\n\n").filter { it.isNotBlank() }
     }
 }

@@ -2,8 +2,10 @@ package fr.unica.miage.pierson.codequest.viewmodel
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import fr.unica.miage.pierson.codequest.data.Question
 import fr.unica.miage.pierson.codequest.data.QuestionSource
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel pour gérer le déroulement d'un quiz.
@@ -26,9 +28,12 @@ class QuizViewModel : ViewModel() {
      * Charge les questions d'un quiz donné par son id.
      */
     fun loadQuestionsForQuiz(idQuiz: Int) {
-        questions = QuestionSource.getQuestionsForQuiz(idQuiz)
-        currentQuestionIndex = 0
-        selectedAnswers.clear()
+        viewModelScope.launch {
+            val loadedQuestions = QuestionSource.getQuestionsForQuiz(idQuiz)
+            questions = loadedQuestions
+            currentQuestionIndex = 0
+            selectedAnswers.clear()
+        }
     }
 
     /**
