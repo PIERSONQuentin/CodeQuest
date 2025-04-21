@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -15,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import fr.unica.miage.pierson.codequest.data.QuestionSource
 import fr.unica.miage.pierson.codequest.screens.*
 import fr.unica.miage.pierson.codequest.viewmodel.*
 import kotlinx.serialization.Serializable
@@ -63,9 +65,12 @@ data class QuizReviewRoute(val idQuiz: Int)
 fun MyApp() {
     val navController = rememberNavController()
     val quizViewModel: QuizViewModel = viewModel()
+
+    // Initialize QuestionSource without passing context
+    QuestionSource.initialize()
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-
     Scaffold(
         topBar = {
             // Ne pas afficher de topBar sur l'écran des résultats
@@ -80,7 +85,6 @@ fun MyApp() {
                                     Icon(Icons.Default.ArrowBack, contentDescription = "Retour")
                                 }
                             }
-
                             // Sur Quiz uniquement -> bouton accueil
                             currentRoute?.contains("QuizRoute") == true -> {
                                 IconButton(onClick = {
@@ -93,7 +97,6 @@ fun MyApp() {
                                     Icon(Icons.Default.Home, contentDescription = "Accueil")
                                 }
                             }
-
                             else -> null
                         }
                     },
@@ -123,7 +126,6 @@ fun MyApp() {
                     }
                 )
             }
-
             composable<QuizDetailRoute> {
                 val route = it.toRoute<QuizDetailRoute>()
                 val viewModel: QuizDetailViewModel = viewModel()
@@ -135,7 +137,6 @@ fun MyApp() {
                     }
                 )
             }
-
             composable<QuizRoute> {
                 val route = it.toRoute<QuizRoute>()
                 QuizScreen(
@@ -146,7 +147,6 @@ fun MyApp() {
                     }
                 )
             }
-
             composable<QuizResultRoute> {
                 val route = it.toRoute<QuizResultRoute>()
                 QuizResultScreen(
@@ -155,12 +155,10 @@ fun MyApp() {
                     navController = navController
                 )
             }
-
             composable<QuizReviewRoute> {
                 val viewModel: QuizViewModel = quizViewModel
                 QuizReviewScreen(viewModel = viewModel, navController = navController)
             }
-
         }
     }
 }
