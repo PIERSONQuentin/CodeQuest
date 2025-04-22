@@ -26,10 +26,15 @@ object QuestionSource {
         val quizzes = DataSource().loadQuizzes()
         val quiz = quizzes.getOrNull(idQuiz) ?: return emptyList()
 
-        val generatedQuestions = openAIService.generateQuestions(quiz.title, 5) // suspend
-        return generatedQuestions.map { rawQuestion ->
-            parseQuestion(rawQuestion)
+        val generatedQuestions = openAIService.generateQuestions(quiz.title, 10)
+
+        val parsedQuestions = generatedQuestions.map { rawQuestion ->
+            parseQuestion(rawQuestion).also { question ->
+                println("Question parsée : $question") // pour debug
+            }
         }
+
+        return parsedQuestions
     }
 
     /**
@@ -39,18 +44,50 @@ object QuestionSource {
      * @return A `Question` object.
      */
     private fun parseQuestion(rawQuestion: String): Question {
-        val lines = rawQuestion.split("\n").map { it.trim() }
-        val codeSnippet = lines.takeWhile { it.isNotEmpty() && !it.startsWith("Question:") }.joinToString("\n")
-        val questionText = lines.find { it.startsWith("Question:") }?.removePrefix("Question:")?.trim() ?: ""
-        val options = lines.filter { it.matches(Regex("[A-D]\\. .*")) }.map { it.substringAfter(". ") }
-        val correctAnswer = lines.find { it.startsWith("Correct answer:") }?.removePrefix("Correct answer:")?.trim()
-        val correctAnswerIndex = correctAnswer?.let { "ABCD".indexOf(it[0]) } ?: -1
+        val lines = rawQuestion.lines().map { it.trim() }.filter { it.isNotEmpty() }
+
+        // Indices clairement identifiés
+        val codeSnippetStart = lines.indexOfFirst { it.startsWith("Extrait de code :") }
+        val questionStart = lines.indexOfFirst { it.startsWith("Question :") }
+        val optionsStart = lines.indexOfFirst { it.matches(Regex("A\\. .*")) }
+        val answerStart = lines.indexOfFirst { it.startsWith("Réponse correcte :") }
+
+        // Vérification stricte (mais sans exception bloquante)
+        val codeSnippet = if (codeSnippetStart != -1 && questionStart > codeSnippetStart) {
+            lines.subList(codeSnippetStart + 1, questionStart).joinToString("\n").let {
+                if (it == "Pas de code associé.") "" else it
+            }
+        } else ""
+
+        val questionText = if (questionStart != -1) {
+            lines[questionStart].removePrefix("Question :").trim()
+        } else {
+            ""
+        }
+
+        val options = mutableListOf<String>()
+        if (optionsStart != -1 && optionsStart + 3 < lines.size) {
+            for (i in 0..3) {
+                val optionLine = lines[optionsStart + i]
+                val optionText = optionLine.substringAfter(". ", "")
+                options.add(optionText)
+            }
+        }
+
+        val correctLetter = if (answerStart != -1 && answerStart < lines.size) {
+            lines[answerStart].removePrefix("Réponse correcte :").trim().firstOrNull()
+        } else null
+
+        val correctAnswerIndex = when (correctLetter) {
+            'A', 'B', 'C', 'D' -> "ABCD".indexOf(correctLetter)
+            else -> 0 // Fallback en cas de problème, par défaut option A
+        }
 
         return Question(
             codeSnippet = codeSnippet,
             questionText = questionText,
-            options = options,
-            correctAnswersIndexes = if (correctAnswerIndex != -1) listOf(correctAnswerIndex) else emptyList()
+            options = if (options.size == 4) options else listOf("Option A", "Option B", "Option C", "Option D"),
+            correctAnswersIndexes = listOf(correctAnswerIndex)
         )
     }
 }

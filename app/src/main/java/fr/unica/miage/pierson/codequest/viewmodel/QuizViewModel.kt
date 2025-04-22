@@ -24,15 +24,20 @@ class QuizViewModel : ViewModel() {
     val currentQuestion: Question?
         get() = questions.getOrNull(currentQuestionIndex)
 
+    var isLoading by mutableStateOf(false)
+        private set
+
     /**
      * Charge les questions d'un quiz donné par son id.
      */
     fun loadQuestionsForQuiz(idQuiz: Int) {
         viewModelScope.launch {
+            isLoading = true
             val loadedQuestions = QuestionSource.getQuestionsForQuiz(idQuiz)
             questions = loadedQuestions
             currentQuestionIndex = 0
             selectedAnswers.clear()
+            isLoading = false
         }
     }
 

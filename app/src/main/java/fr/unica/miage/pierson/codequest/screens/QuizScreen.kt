@@ -31,88 +31,95 @@ fun QuizScreen(
         viewModel.loadQuestionsForQuiz(idQuiz)
     }
 
-    val question = viewModel.currentQuestion ?: return
+    // Affiche un indicateur de chargement pendant le chargement des questions
+    if (viewModel.isLoading) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
+        }
+    } else {
+        val question = viewModel.currentQuestion ?: return
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            // Indicateur de progression
-            Text(
-                text = "Question ${viewModel.currentQuestionIndex + 1}/${viewModel.getTotal()}",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Bloc d'extrait de code
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Column(
+                // Indicateur de progression
+                Text(
+                    text = "Question ${viewModel.currentQuestionIndex + 1}/${viewModel.getTotal()}",
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Bloc d'extrait de code
+                Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Center
+                        .fillMaxWidth()
+                        .height(400.dp)
+                        .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(8.dp))
                 ) {
-                    Text(
-                        text = question.codeSnippet,
-                        fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Texte de la question
-            Text(
-                text = question.questionText,
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Choix de réponses
-            Column {
-                question.options.forEachIndexed { index, option ->
-                    val isSelected = viewModel.selectedAnswers[viewModel.currentQuestionIndex]?.contains(index) == true
-                    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                    else MaterialTheme.colorScheme.surfaceVariant
-
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                            .background(backgroundColor, RoundedCornerShape(8.dp))
-                            .clickable { viewModel.toggleAnswer(index) }
-                            .padding(12.dp)
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Text(option)
+                        Text(
+                            text = question.codeSnippet,
+                            fontFamily = FontFamily.Monospace,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
                 }
-            }
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.weight(1f))
 
-            // Bouton Suivant / Voir le score
-            Button(
-                onClick = {
-                    if (viewModel.isLastQuestion()) onFinishQuiz()
-                    else viewModel.goToNextQuestion()
-                },
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth()
-            ) {
-                Text(if (viewModel.isLastQuestion()) "Voir le score" else "Suivant")
+                // Texte de la question
+                Text(
+                    text = question.questionText,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Choix de réponses
+                Column {
+                    question.options.forEachIndexed { index, option ->
+                        val isSelected = viewModel.selectedAnswers[viewModel.currentQuestionIndex]?.contains(index) == true
+                        val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                        else MaterialTheme.colorScheme.surfaceVariant
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                                .background(backgroundColor, RoundedCornerShape(8.dp))
+                                .clickable { viewModel.toggleAnswer(index) }
+                                .padding(12.dp)
+                        ) {
+                            Text(option)
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Bouton Suivant / Voir le score
+                Button(
+                    onClick = {
+                        if (viewModel.isLastQuestion()) onFinishQuiz()
+                        else viewModel.goToNextQuestion()
+                    },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth()
+                ) {
+                    Text(if (viewModel.isLastQuestion()) "Voir le score" else "Suivant")
+                }
             }
         }
     }

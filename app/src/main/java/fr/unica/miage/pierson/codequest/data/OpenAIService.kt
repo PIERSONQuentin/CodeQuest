@@ -31,13 +31,56 @@ class OpenAIService {
      */
     suspend fun generateQuestions(topic: String, numQuestions: Int): List<String> {
         val prompt = """
-            Generate $numQuestions quiz questions about $topic. Each question should include:
-            - A code snippet (if applicable)
-            - A question text
-            - Multiple-choice options (A, B, C, D)
-            - The correct answer(s).
-            Format each question clearly and separate them with a blank line.
+        Tu dois générer exactement $numQuestions questions de quiz sur "$topic".
+        
+        Chaque question doit impérativement respecter exactement la structure suivante, sans exception :
+        
+        Extrait de code :
+        (si aucun extrait de code n'est nécessaire, indique explicitement : "Pas de code associé.")
+        
+        Question : Texte complet de la question
+        
+        A. Première option
+        B. Deuxième option
+        C. Troisième option
+        D. Quatrième option
+        
+        Réponse correcte : Lettre correcte (A, B, C ou D uniquement)
+        
+        Tu dois obligatoirement séparer chaque question avec une ligne contenant uniquement ---.
+        
+        Voici un exemple exact à suivre :
+        
+        Extrait de code :
+        val x = 10
+        println(x)
+        
+        Question : Quel résultat affiche ce code ?
+        
+        A. 10
+        B. Erreur
+        C. null
+        D. 0
+        
+        Réponse correcte : A
+        
+        ---
+        
+        Extrait de code :
+        Pas de code associé.
+        
+        Question : Python est-il typé dynamiquement ?
+        
+        A. Oui
+        B. Non
+        C. Seulement avec annotations
+        D. Seulement en Python 3
+        
+        Réponse correcte : A
+        
+        Ne génère aucun texte supplémentaire ou explication.
         """.trimIndent()
+
 
         val chatCompletionRequest = ChatCompletionRequest(
             model = ModelId("gpt-3.5-turbo"),
@@ -48,6 +91,6 @@ class OpenAIService {
 
         val response = openAI.chatCompletion(chatCompletionRequest)
         val generatedText = response.choices.firstOrNull()?.message?.content ?: ""
-        return generatedText.split("\n\n").filter { it.isNotBlank() }
+        return generatedText.split("\n---\n").filter { it.isNotBlank() }
     }
 }
