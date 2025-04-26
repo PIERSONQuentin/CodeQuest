@@ -78,3 +78,5 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
 - [ ] Possibilité de rejouer une série générée par l’IA
 
 ### Liens vers la vidéo
+
+https://github.com/user-attachments/assets/00bbac70-3357-48fd-bef2-3cf6ec3348d6
