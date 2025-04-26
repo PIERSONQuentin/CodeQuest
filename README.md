@@ -73,9 +73,23 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
     - [x] Réponses correctes en vert, erreurs en rouge, neutres en gris
     - [x] Bouton "Retour à l’accueil" en bas
 
-- [ ] Intégration de l’API ChatGPT pour générer dynamiquement les questions
-- [ ] Analyse et transformation des réponses de l’IA en objets `Question`
-- [ ] Possibilité de rejouer une série générée par l’IA
+- [x] Intégration complète de l’API ChatGPT pour générer dynamiquement les questions et extraits de code
+- [x] Analyse et transformation des réponses de l’IA en objets `Question`
+- [x] Synchronisation précise du chargement des questions avant affichage de l'écran de quiz
+
+### Difficultés rencontrées et solutions mises en place
+
+- **Respect du format des réponses de l’IA :**  
+  Problème de parsing des réponses générées par l'API.  
+  → Solution : Ajout d'un séparateur clair (`---`) dans le prompt pour garantir un parsing précis et fiable.
+
+- **Synchronisation de l'interface :**  
+  Risque d'afficher l'interface avant que les questions ne soient prêtes.  
+  → Solution : Intégration d'un état de chargement explicite via un indicateur visuel (`CircularProgressIndicator`).
+
+- **Gestion des erreurs potentielles :**  
+  Réponses incomplètes ou mal formatées de l'IA.  
+  → Solution : Parsing avec des valeurs par défaut et logging détaillé pour faciliter le debugging.
 
 ### Liens vers la vidéo
 

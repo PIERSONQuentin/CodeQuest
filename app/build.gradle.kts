@@ -1,3 +1,18 @@
+import java.util.Properties
+
+// Lire local.properties avant le bloc android
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        load(file.inputStream())
+    }
+}
+
+// Récupérer la clé API OpenAI
+val openAiApiKey = localProperties.getProperty("OPENAI_API_KEY")
+    ?: throw GradleException("Missing OPENAI_API_KEY in local.properties")
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,6 +33,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Ajouter la clé API OpenAI au fichier de configuration de build
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiApiKey\"")
     }
 
     buildTypes {
@@ -38,6 +56,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true // Pour la génération de BuildConfig custom
     }
 }
 
@@ -61,6 +80,19 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
     kapt(libs.androidx.room.compiler)
+
+    implementation(libs.kotlinx.serialization.json.v160)
+
+    // Aallam OpenAI client
+    implementation(libs.openai.client)
+
+    // Ktor client
+    implementation(libs.ktor.client.core)
+
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.serialization.kotlinx.json)
 }
