@@ -92,3 +92,5 @@ Ce TD est à faire en groupe de 2 ou 3 personnes.
   → Solution : Parsing avec des valeurs par défaut et logging détaillé pour faciliter le debugging.
 
 ### Liens vers la vidéo
+
+https://github.com/user-attachments/assets/00bbac70-3357-48fd-bef2-3cf6ec3348d6

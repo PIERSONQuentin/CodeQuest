@@ -26,7 +26,7 @@ object QuestionSource {
         val quizzes = DataSource().loadQuizzes()
         val quiz = quizzes.getOrNull(idQuiz) ?: return emptyList()
 
-        val generatedQuestions = openAIService.generateQuestions(quiz.title, 10)
+        val generatedQuestions = openAIService.generateQuestions(quiz.description, 10)
 
         val parsedQuestions = generatedQuestions.map { rawQuestion ->
             parseQuestion(rawQuestion).also { question ->
