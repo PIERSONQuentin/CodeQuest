@@ -1,18 +1,6 @@
-# Université Côte d'Azur - DS4H - EMSI - IA2
-## Cours de Programmation Mobile et IA - Leo Donati
-## TD3 - Soyez créatif avec l'IA
-
-Dans ce TD, vous pouvez choisir quelle technologie vous voulez utiliser pour ajouter de l'IA à votre application. Vous pouvez utiliser des modèles pré-entrainés, des API ou créer votre propre modèle.
-
-Ce TD est à faire en groupe de 2 ou 3 personnes.
-
-### Membres du groupe
-- **PIERSON Quentin**
-- **DAO Tuan Linh**
-
 ## Présentation du Projet
 
-**CodeQuest** est une application web éducative utilisant l'intelligence artificielle (IA) pour créer des mini-jeux interactifs permettant aux utilisateurs de tester et renforcer leurs connaissances en programmation. L'application génère dynamiquement des exercices de code et des questions théoriques grâce à l'API ChatGPT d'OpenAI.
+**CodeQuest** est une application mobile éducative utilisant l'intelligence artificielle (IA) pour créer des mini-jeux interactifs permettant aux utilisateurs de tester et renforcer leurs connaissances en programmation. L'application génère dynamiquement des exercices de code et des questions théoriques grâce à l'API ChatGPT d'OpenAI.
 
 ### Objectifs
 
